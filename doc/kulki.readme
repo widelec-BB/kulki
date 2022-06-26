@@ -1,0 +1,20 @@
+Short:          Puzzle game
+Author:         Filip "widelec" Maryjanski
+Type:           games/think
+Version:        1.0
+
+The goal is to remove elements placed on a 9 x 9 field by constructing lines of at least 5 same elements.
+After move which not ends with elements dissappering 3 new elements are placed in random positions.
+When there is no empty spaces in the field game ends.
+
+Game supports loading extra sets of graphics. Images with names ending with ``.ms`` placed in ``gfx`` drawer
+will be discovered during startup and available in preferences. As example how such image should look
+please check ``gfx/3D.ms``.
+
+Source code and issues tracker is available at https://github.com/widelec-BB/kulki
+
+What do you need:
+----------------
+
+ - any computer with MorphOS 3.17 running on.
+

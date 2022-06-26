@@ -1,0 +1,169 @@
+## version $VER: Kulki.catalog 1.0 (12.06.2022)
+## language polski
+## codeset 0
+;
+;#version 1
+; (Application Description)
+MSG_a2ae7fa1
+Gra logiczna
+; Puzzle game
+;
+; (Start button label)
+MSG_627d7461
+Rozpocznij now± grê
+; Start New Game
+;
+; (Label for string with score result)
+MSG_abc2ab70
+Wynik:
+; Score:
+;
+; (Label for next items display)
+MSG_8b79056e
+Nastêpne kolory:
+; Next Colors:
+;
+; (Score format template for status bar)
+MSG_44a8bbfd
+%u punktów
+; %u points
+;
+; (Message when player got highscore)
+MSG_815976ed
+Gratulacje!
+; Congratulations!
+;
+; (Message when player got highscore)
+MSG_5a932637
+Wpisz swoje imiê:
+; Enter your name:
+;
+; (Save new highscore entry)
+MSG_2a155edb
+Zapisz
+; Save
+;
+; (Menu entry label for starting new game)
+MSG_b41a7715
+Zacznij now± grê
+; Start New Game
+;
+; (Menu new game entry shortcut)
+MSG_1b8c177a
+N
+; N
+;
+; (Menu About)
+MSG_152aefa
+O programie...
+; About...
+;
+; (Menu About entry shortcut)
+MSG_ac22fc62
+?
+; ?
+;
+; (Menu About MUI)
+MSG_87894d30
+O MUI...
+; About MUI...
+;
+; (Menu quit)
+MSG_d772cc20
+Wyj¶cie
+; Quit
+;
+; (Menu quit shortcut)
+MSG_edd08b2a
+Q
+; Q
+;
+; (Menu entry label for preferences)
+MSG_bc4a04f7
+Ustawienia
+; Preferences
+;
+; (Menu entry for difficulty settings)
+MSG_da2b7d4
+Poziom trudno¶ci...
+; Difficulty...
+;
+; (Menu label difficulty 5 colors)
+MSG_f9d6763b
+5 kolorów
+; 5 colors
+;
+; (Menu label difficulty 7 colors)
+MSG_1468f93f
+7 kolorów
+; 7 colors
+;
+; (Menu label difficulty 9 colors)
+MSG_2efb7c43
+9 kolorów
+; 9 colors
+;
+; (Menu entry label for themes selection)
+MSG_8d01165c
+Zestaw grafiki...
+; Theme...
+;
+; (Menu MUI Preferences)
+MSG_7155008c
+MUI...
+; MUI...
+;
+; (Highscores list group title)
+MSG_bb8b070e
+Najlepsze wyniki
+; Highscores
+;
+; (Quit game confirmation requester title)
+MSG_1b830360
+Czy na pewno?
+; Are you sure?
+;
+; (Quit game confirmation requester message)
+MSG_dac90d05
+\33cCzy na pewno zakoñczyæ grê?\nDotychczasowe postêpy zostan± utracone.
+; \33cAre you sure you want to quit?\nAll progress will be lost.
+;
+; (Quit game confirmation)
+MSG_ccb8725b
+_Tak
+; _Yes
+;
+; (Quit game cancel button label)
+MSG_266f18e0
+_Nie
+; _No
+;
+; (New game start confirmation requester title)
+MSG_e5a8b295
+Czy na pewno?
+; Are you sure?
+;
+; (New game start confirmation requester message)
+MSG_d192b9c9
+\33cCzy na pewno rozpocz±æ now± grê?\nDotychczasowe postêpy zostan± utracone.
+; \33cAre you sure you want to start new game?\nAll progress will be lost.
+;
+; (New game start confirmation)
+MSG_8cbec1b0
+_Tak
+; _Yes
+;
+; (New game start cancel button)
+MSG_cc22bcb5
+_Nie
+; _No
+;
+; (Name for internal (default) theme)
+MSG_e0afa115
+Podstawowy
+; Basic
+;
+; (Label for string with time passed)
+MSG_6acb1177
+Czas:
+; Time:
