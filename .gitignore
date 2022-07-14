@@ -1,0 +1,9 @@
+Kulki
+Kulki_debug
+*.m.db.o
+*.m.db.d
+*.m.o
+*.m.d
+.DS_Store
+._*
+thumbs.db
