@@ -17,11 +17,8 @@
 
 -(id) init
 {
-	MUIText *label = [MUIText textWithContents: OBL(@"Time:", @"Label for string with time passed")];
+	MUILabel *label = [MUILabel label: OBL(@"Time:", @"Label for string with time passed")];
 	MUIText *txt = [MUIText textWithContents: @"00:00"];
-
-	label.preParse = @"\33r";
-	label.weight = 0;
 
 	if ((self = [super initHorizontalWithObjects: label, txt, nil]))
 	{

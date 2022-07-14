@@ -59,22 +59,16 @@ enum MenuOptions
 	if ((self = [super init]))
 	{
 		MUIButton *start = [MUIButton buttonWithLabel: OBL(@"Start New Game", @"Start button label")];
-		MUIText *scoreLabel = [MUIText textWithContents: OBL(@"Score:", @"Label for string with score result")];
-		MUIText *nextItemsLabel = [MUIText textWithContents: OBL(@"Next Colors:", @"Label for next items display")];
+		MUILabel *scoreLabel = [MUILabel label: OBL(@"Score:", @"Label for string with score result")];
+		MUILabel *nextItemsLabel = [MUILabel label2: OBL(@"Next Colors:", @"Label for next items display")];
 		TitleImage *titleImg = [[TitleImage alloc] initWithPicture: [[Picture alloc] initFromFile: @"PROGDIR:gfx/title"]];
 		TitleImage *congratsImg = [[TitleImage alloc] initWithPicture: [[Picture alloc] initFromFile: @"PROGDIR:gfx/congrats"]];
 		MUIGroup *statusBar, *highscoresGroup;
-		MUIText *nameLabel, *congratulations;
+		MUIText *congratulations;
 		MUIButton *saveButton;
 		LONG i;
 
 		start.weight = 1;
-
-		scoreLabel.preParse = @"\33r";
-		scoreLabel.weight = 0;
-
-		nextItemsLabel.preParse = @"\33r";
-		nextItemsLabel.weight = 0;
 
 		_scoreTxt = [MUIText textWithContents: [OBString stringWithFormat: OBL(@"%u points", @"Score format template for status bar"), 0]];
 		_ga = [[GameArea alloc] init];
@@ -130,7 +124,7 @@ enum MenuOptions
 						[MUIRectangle rectangle],
 					nil],
 					[MUIGroup horizontalGroupWithObjects:
-						(nameLabel = [MUIText textWithContents: OBL(@"Enter your name:", @"Message when player got highscore")]),
+						[MUILabel label2: OBL(@"Enter your name:", @"Message when player got highscore")],
 						(_nameStr = [MUIString string]),
 					nil],
 					[MUIGroup horizontalGroupWithObjects:
@@ -180,10 +174,6 @@ enum MenuOptions
 		[start notify: @selector(selected) trigger: NO performSelector: @selector(startNewGame) withTarget: self];
 		[saveButton notify: @selector(selected) trigger: NO performSelector: @selector(saveHighScore) withTarget: self];
 		[_nameStr notify: @selector(acknowledge) performSelector: @selector(saveHighScore) withTarget: self];
-
-		nameLabel.weight = 10;
-		nameLabel.preParse = @"\33r";
-		nameLabel.frame = MUIV_Frame_String;
 
 		highscoresGroup.frameTitle = OBL(@"Highscores", @"Highscores list group title");
 		highscoresGroup.frame = MUIV_Frame_Group;
