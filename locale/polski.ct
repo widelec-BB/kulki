@@ -1,4 +1,4 @@
-## version $VER: Kulki.catalog 1.0 (12.06.2022)
+## version $VER: Kulki.catalog 1.1 (14.07.2022)
 ## language polski
 ## codeset 0
 ;
@@ -78,10 +78,10 @@ MSG_edd08b2a
 Q
 ; Q
 ;
-; (Menu entry label for preferences)
-MSG_bc4a04f7
+; (Menu entry label for settings)
+MSG_78c92355
 Ustawienia
-; Preferences
+; Settings
 ;
 ; (Menu entry for difficulty settings)
 MSG_da2b7d4

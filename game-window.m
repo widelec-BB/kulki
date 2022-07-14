@@ -146,7 +146,7 @@ enum MenuOptions
 				[MUIMenuitem barItem],
 				[MUIMenuitem itemWithTitle: OBL(@"Quit", @"Menu quit") shortcut: OBL(@"Q", @"Menu quit shortcut") userData: MenuQuit],
 			nil],
-			[[MUIMenu alloc] initWithTitle: OBL(@"Preferences", @"Menu entry label for preferences") objects:
+			[[MUIMenu alloc] initWithTitle: OBL(@"Settings", @"Menu entry label for settings") objects:
 				[[MUIMenu alloc] initWithTitle: OBL(@"Difficulty...", @"Menu entry for difficulty settings") objects:
 					(_difficultyMenuItems[0] = [MUIMenuitem checkmarkItemWithTitle: OBL(@"5 colors", @"Menu label difficulty 5 colors") shortcut: nil userData: MenuDifficulty5 checked: NO]),
 					(_difficultyMenuItems[1] = [MUIMenuitem checkmarkItemWithTitle: OBL(@"7 colors", @"Menu label difficulty 7 colors") shortcut: nil userData: MenuDifficulty7 checked: NO]),
