@@ -39,6 +39,18 @@
 	_started = YES;
 }
 
+-(VOID) startWithDiff: (ULONG)diff
+{
+	struct timeval current;
+
+	[OBSystemTime getUpTime: &current];
+
+	_timerStart = current.tv_secs;
+	_timerDiff = diff;
+	_text.contents = [OBString stringWithFormat: @"%02u:%02u", diff / 60, diff % 60];
+	_started = YES;
+}
+
 -(VOID) pause
 {
 	struct timeval current;
@@ -64,17 +76,21 @@
 
 -(VOID) tick
 {
-	struct timeval current;
-	ULONG elapsed;
+	ULONG elapsed = self.time;
 
 	if (!_started)
 		return;
 
+	_text.contents = [OBString stringWithFormat: @"%02u:%02u", elapsed / 60, elapsed % 60];
+}
+
+-(ULONG) time
+{
+	struct timeval current;
+
 	[OBSystemTime getUpTime: &current];
 
-	elapsed = current.tv_secs - _timerStart + _timerDiff;
-
-	_text.contents = [OBString stringWithFormat: @"%02u:%02u", elapsed / 60, elapsed % 60];
+	return current.tv_secs - _timerStart + _timerDiff;
 }
 
 -(BOOL) setup

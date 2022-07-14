@@ -9,8 +9,10 @@
 @interface Timer : MUIGroup
 
 -(VOID) start;
+-(VOID) startWithDiff: (ULONG)diff;
 -(VOID) stop;
 -(VOID) pause;
 -(VOID) resume;
+-(ULONG) time;
 
 @end
