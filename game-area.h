@@ -12,10 +12,12 @@
 @interface GameArea : MUIArea
 
 @property (nonatomic, readonly) BOOL firstMoveDone;
-@property (nonatomic, readonly) UBYTE difficulty;
+@property (nonatomic) UBYTE difficulty;
 @property (nonatomic) ULONG score;
 
 -(VOID) startNewGameWithDifficulty: (UBYTE)level;
 -(VOID) restoreFieldsStateFrom: (SavedGame *)sg;
+-(SavedGame *) saveGame;
+-(VOID) loadGame: (SavedGame *)sg;
 
 @end

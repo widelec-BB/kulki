@@ -18,5 +18,6 @@
 -(VOID) resumeTimer;
 -(VOID) updateScore;
 -(VOID) setNextItems: (BYTE[3])nextItems;
+-(VOID) loadGame;
 
 @end

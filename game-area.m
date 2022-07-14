@@ -681,6 +681,29 @@
 	[(GameWindow *)self.windowObject setNextItems: _nextItems];
 }
 
+-(SavedGame *) saveGame
+{
+	SavedGame *sg = [[SavedGame alloc] init];
+
+	[sg storeFieldsState: _fields];
+	[sg storeNextItems: _nextItems];
+
+	sg.score = self.score;
+	sg.difficulty = self.difficulty;
+
+	return sg;
+}
+
+-(VOID) loadGame: (SavedGame *)sg
+{
+	[sg loadFieldsState: _fields];
+	[sg loadNextItems: _nextItems];
+
+	self.score = sg.score;
+	self.difficulty = sg.difficulty;
+	_firstMoveDone = YES;
+}
+
 -(VOID) setScore: (ULONG)value
 {
 	_score = value;

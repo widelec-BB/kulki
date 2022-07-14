@@ -6,7 +6,10 @@
 
 #import <mui/MUIFramework.h>
 #import <proto/dos.h>
+#import <proto/muimaster.h>
+#import <proto/icon.h>
 #import <libraries/charsets.h>
+#import <workbench/icon.h>
 #import "globaldefines.h"
 #import "game-area.h"
 #import "application.h"
@@ -53,6 +56,7 @@ enum MenuOptions
 
 	OBArray *_availableThemes;
 	SavedGame *_previousGameState;
+	SavedGame *_savedGame;
 }
 
 @synthesize prevoiusGameState = _previousGameState;
@@ -251,10 +255,26 @@ enum MenuOptions
 	if (_ga.firstMoveDone)
 	{
 		MUIRequest *req = [MUIRequest requestWithTitle: OBL(@"Are you sure?", @"Quit game confirmation requester title")
-		   message: OBL(@"\33cAre you sure you want to quit?\nAll progress will be lost.", @"Quit game confirmation requester message")
-		   buttons: [OBArray arrayWithObjects: OBL(@"_Yes", @"Quit game confirmation"), OBL(@"_No", @"Quit game cancel button label"), nil]];
-		if ([req requestWithWindow: self] != 1)
+		   message: OBL(@"A game is in progress. What do you want to do?", @"Quit game confirmation requester message")
+		   buttons: [OBArray arrayWithObjects: OBL(@"_Save Game and Quit", @"Quit game with save"),
+		                                       OBL(@"_Quit Without Saving", @"Quit game without saving game"),
+		                                       OBL(@"_Cancel", @"Do not quit"), nil]];
+		switch ([req requestWithWindow: self])
+		{
+			case 1:
+				/* save game and quit */
+				[self saveGame];
+			break;
+
+			case 2:
+				/* quit without saving */
+				_savedGame = nil;
+			break;
+
+			case 0:
+				/* cancel */
 			return;
+		}
 	}
 	[self.applicationObject quit];
 }
@@ -374,6 +394,9 @@ enum MenuOptions
 
 	[GameField setActiveTheme: nil]; // allow active theme object to be released
 
+	if (_savedGame != nil)
+		[dataspace setData: [_savedGame serialize] forID: MAKE_ID('G', 'A', 'M', 'E')];
+
 	return [super export: dataspace];
 }
 
@@ -382,6 +405,8 @@ enum MenuOptions
 	LONG i;
 	OBString *theme = [OBString stringFromData: [dataspace dataForID: MAKE_ID('T', 'H', 'E', 'M')] encoding: MIBENUM_UTF_8];
 	id <Theme> activeTheme = [_availableThemes objectAtIndex: 0]; // default to internal theme which is always first one.
+
+	_savedGame = [[SavedGame alloc] initFromData: [dataspace dataForID: MAKE_ID('G', 'A', 'M', 'E')]];
 
 	for (i = 1; i < _availableThemes.count; i++)
 	{
@@ -452,6 +477,38 @@ enum MenuOptions
 	_ga.score = _previousGameState.score;
 	[_ga restoreFieldsStateFrom: _previousGameState];
 	self.previousGameState = nil;
+}
+
+-(VOID) saveGame
+{
+	_savedGame = [_ga saveGame];
+	_savedGame.time = _timer.time;
+}
+
+-(VOID) loadGame
+{
+	if (_savedGame)
+	{
+		MUIRequest *req = [MUIRequest requestWithTitle: OBL(@"Do you want to load previous game?", @"Requester title if load game")
+			   message: OBL(@"There is previous game saved. Do you want to load it?", @"Regester message if load game")
+			   buttons: [OBArray arrayWithObjects: OBL(@"_Yes", @"Load game confirmation"), OBL(@"_No", @"Load start cancel button"), nil]];
+		if ([req requestWithWindow: self] == 1)
+		{
+			UBYTE nextItems[3];
+
+			[_ga loadGame: _savedGame];
+			[_savedGame loadNextItems: nextItems];
+			[self setNextItems: nextItems];
+
+			[self checkDifficultyLevel: _savedGame.difficulty];
+			[_timer startWithDiff: _savedGame.time];
+
+			_statusBarPager.activePage = 1;
+			_gamePager.activePage = 1;
+		}
+		else
+			_savedGame = nil;
+	}
 }
 
 @end

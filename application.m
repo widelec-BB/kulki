@@ -75,6 +75,7 @@
 	[super loadENV];
 
 	_gameWindow.open = YES;
+	[_gameWindow loadGame];
 
 	[super run];
 
