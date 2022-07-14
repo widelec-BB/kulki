@@ -23,6 +23,11 @@ MSG_8b79056e
 Nastêpne kolory:
 ; Next Colors:
 ;
+; (Short help for undo last move button)
+MSG_edc7d963
+Wycofaj ostatni ruch
+; Undo last move
+;
 ; (Score format template for status bar)
 MSG_44a8bbfd
 %u punktów
@@ -124,19 +129,25 @@ Czy na pewno?
 ; Are you sure?
 ;
 ; (Quit game confirmation requester message)
-MSG_dac90d05
-\33cCzy na pewno zakoñczyæ grê?\nDotychczasowe postêpy zostan± utracone.
-; \33cAre you sure you want to quit?\nAll progress will be lost.
+MSG_f25fef4
+Jeste¶ w trakcie gry. Co chcesz zrobiæ?
+; A game is in progress. What do you want to do?
 ;
-; (Quit game confirmation)
-MSG_ccb8725b
-_Tak
-; _Yes
+; (Quit game with save)
+MSG_6960dc8b
+Z_apisaæ grê i zakoñczyæ
+; _Save Game and Quit
 ;
-; (Quit game cancel button label)
-MSG_266f18e0
-_Nie
-; _No
+; (Quit game without saving game)
+MSG_d91ba956
+_Zakoñczyæ bez zapisywania gry
+; _Quit Without Saving
+;
+;
+; (Do not quit)
+MSG_845f88b1
+_Wróciæ do gry
+; _Cancel
 ;
 ; (New game start confirmation requester title)
 MSG_e5a8b295
@@ -155,6 +166,26 @@ _Tak
 ;
 ; (New game start cancel button)
 MSG_cc22bcb5
+_Nie
+; _No
+;
+; (Requester title if load game)
+MSG_8ce2d733
+Czy chcesz za³adowaæ poprzedni± grê?
+; Do you want to load previous game?
+;
+; (Regester message if load game)
+MSG_7ed58389
+Wykryto poprzednio zapisan± grê. Czy chcesz j± wczytaæ?
+; There is previous game saved. Do you want to load it?
+;
+; (Load game confirmation)
+MSG_3a2d4718
+_Tak
+; _Yes
+;
+; (Load start cancel button)
+MSG_81c76e51
 _Nie
 ; _No
 ;
