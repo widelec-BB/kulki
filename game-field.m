@@ -11,7 +11,7 @@
 {
 	LONG _bounceOffset, _bounceDiff;
 	BOOL _active;
-	LONG _type;
+	BYTE _type;
 }
 
 id <Theme> activeTheme;
