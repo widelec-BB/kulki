@@ -11,8 +11,8 @@
 @interface GameArea : MUIArea
 
 @property (nonatomic, readonly) BOOL firstMoveDone;
-@property (nonatomic, readonly) LONG difficulty;
+@property (nonatomic, readonly) UBYTE difficulty;
 
--(VOID) startNewGameWithDifficulty: (LONG)level;
+-(VOID) startNewGameWithDifficulty: (UBYTE)level;
 
 @end

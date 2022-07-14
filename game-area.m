@@ -14,13 +14,11 @@
 #import "game-window.h"
 #import "game-area.h"
 
-#define FIELDS_COUNT 9
-
 @implementation GameArea
 {
 	OBScheduledTimer *_animationTimer;
 
-	GameField *_fields[FIELDS_COUNT][FIELDS_COUNT];
+	GameField *_fields[GAME_FIELDS_IN_LINE][GAME_FIELDS_IN_LINE];
 	GameField *_activeField;
 
 	OBMutableArray *_dirtyFields;
@@ -28,7 +26,7 @@
 
 	LONG _nextItems[3];
 	BOOL _firstMoveDone;
-	LONG _difficulty;
+	UBYTE _difficulty;
 
 	BOOL _wasDown;
 }
@@ -47,12 +45,12 @@
 		self.background = MUII_GroupBack;
 		self.handledEvents = IDCMP_MOUSEBUTTONS;
 
-		_dirtyFields = [OBMutableArray arrayWithCapacity: FIELDS_COUNT * FIELDS_COUNT];
+		_dirtyFields = [OBMutableArray arrayWithCapacity: GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE];
 		_queue = [OBMutableArray arrayWithCapacity: 100];
 
-		for (x = 0; x < FIELDS_COUNT; x++)
+		for (x = 0; x < GAME_FIELDS_IN_LINE; x++)
 		{
-			for (y = 0; y < FIELDS_COUNT; y++)
+			for (y = 0; y < GAME_FIELDS_IN_LINE; y++)
 			{
 				_fields[x][y] = [[GameField alloc] initWithColumn: x row: y];
 			}
@@ -83,7 +81,7 @@
 	[super cleanup];
 }
 
--(VOID) startNewGameWithDifficulty: (LONG)level
+-(VOID) startNewGameWithDifficulty: (UBYTE)level
 {
 	OBMutableArray *fields = [OBMutableArray arrayWithCapacity: 5];
 	LONG x, y;
@@ -91,9 +89,9 @@
 	[_queue removeAllObjects];
 	_difficulty = level;
 
-	for (x = 0; x < FIELDS_COUNT; x++)
+	for (x = 0; x < GAME_FIELDS_IN_LINE; x++)
 	{
-		for (y = 0; y < FIELDS_COUNT; y++)
+		for (y = 0; y < GAME_FIELDS_IN_LINE; y++)
 		{
 			[_fields[x][y] clear];
 		}
@@ -144,27 +142,27 @@
 	{
 		struct RastPort *rp = self.rastPort;
 		LONG x, y, i;
-		LONG field_width = (self.innerWidth - FIELDS_COUNT) / FIELDS_COUNT;
-		LONG field_height = (self.innerHeight - FIELDS_COUNT) / FIELDS_COUNT;
+		LONG field_width = (self.innerWidth - GAME_FIELDS_IN_LINE) / GAME_FIELDS_IN_LINE;
+		LONG field_height = (self.innerHeight - GAME_FIELDS_IN_LINE) / GAME_FIELDS_IN_LINE;
 
 		SetAPen(rp, 13);
-		for (i = 0; i <= FIELDS_COUNT; i++)
+		for (i = 0; i <= GAME_FIELDS_IN_LINE; i++)
 		{
 			// vertical line
-			Move(rp, self.left + self.innerWidth / FIELDS_COUNT * i, self.top);
-			Draw(rp, self.left + self.innerWidth / FIELDS_COUNT * i, self.top + self.innerHeight / FIELDS_COUNT * FIELDS_COUNT);
+			Move(rp, self.left + self.innerWidth / GAME_FIELDS_IN_LINE * i, self.top);
+			Draw(rp, self.left + self.innerWidth / GAME_FIELDS_IN_LINE * i, self.top + self.innerHeight / GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE);
 
 			// horizontal line
-			Move(rp, self.left, self.top + self.innerHeight / FIELDS_COUNT * i);
-			Draw(rp, self.left + self.innerWidth / FIELDS_COUNT * FIELDS_COUNT, self.top + self.innerHeight / FIELDS_COUNT * i);
+			Move(rp, self.left, self.top + self.innerHeight / GAME_FIELDS_IN_LINE * i);
+			Draw(rp, self.left + self.innerWidth / GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE, self.top + self.innerHeight / GAME_FIELDS_IN_LINE * i);
 		}
 
-		for (x = 0; x < FIELDS_COUNT; x++)
+		for (x = 0; x < GAME_FIELDS_IN_LINE; x++)
 		{
-			for (y = 0; y < FIELDS_COUNT; y++)
+			for (y = 0; y < GAME_FIELDS_IN_LINE; y++)
 			{
-				LONG left = self.left + self.innerWidth / FIELDS_COUNT * x + 1;
-				LONG top = self.top + self.innerHeight / FIELDS_COUNT * y + 1;
+				LONG left = self.left + self.innerWidth / GAME_FIELDS_IN_LINE * x + 1;
+				LONG top = self.top + self.innerHeight / GAME_FIELDS_IN_LINE * y + 1;
 
 				[_fields[x][y] draw: rp left: left width: field_width top: top height: field_height];
 			}
@@ -197,9 +195,9 @@
 {
 	LONG i, j;
 
-	for (i = 0; i < FIELDS_COUNT; i++)
+	for (i = 0; i < GAME_FIELDS_IN_LINE; i++)
 	{
-		for (j = 0; j < FIELDS_COUNT; j++)
+		for (j = 0; j < GAME_FIELDS_IN_LINE; j++)
 		{
 			if ([_fields[i][j] isInObject: x y: y])
 				return _fields[i][j];
@@ -272,9 +270,9 @@
 	if ([self checkLinesAroundMultiple: fields])
 		return;
 
-	for (x = 0; x < FIELDS_COUNT; x++)
+	for (x = 0; x < GAME_FIELDS_IN_LINE; x++)
 	{
-		for (y = 0; y < FIELDS_COUNT; y++)
+		for (y = 0; y < GAME_FIELDS_IN_LINE; y++)
 		{
 			if ([_fields[x][y] empty])
 				return;
@@ -306,7 +304,7 @@
 	// left
 	for (xb = gf.column - 1; xb >= 0 && _fields[xb][gf.row].type == gf.type; xb--);
 	// right
-	for (xf = gf.column + 1; xf < FIELDS_COUNT && _fields[xf][gf.row].type == gf.type; xf++);
+	for (xf = gf.column + 1; xf < GAME_FIELDS_IN_LINE && _fields[xf][gf.row].type == gf.type; xf++);
 	if (xf - xb > 5)
 	{
 		fieldsCleared += xf - xb - 1;
@@ -324,7 +322,7 @@
 	// up
 	for (yb = gf.row - 1; yb >= 0 && _fields[gf.column][yb].type == gf.type; yb--);
 	// down
-	for (yf = gf.row + 1; yf < FIELDS_COUNT && _fields[gf.column][yf].type == gf.type; yf++);
+	for (yf = gf.row + 1; yf < GAME_FIELDS_IN_LINE && _fields[gf.column][yf].type == gf.type; yf++);
 	if (yf - yb > 5)
 	{
 		fieldsCleared += yf - yb - 1;
@@ -342,7 +340,7 @@
 	// left up
 	for (xb = gf.column - 1, yb = gf.row - 1; xb >= 0 && yb >= 0 && _fields[xb][yb].type == gf.type; xb--, yb--);
 	// right down
-	for (xf = gf.column + 1, yf = gf.row + 1; xf < FIELDS_COUNT && yf < FIELDS_COUNT && _fields[xf][yf].type == gf.type; xf++, yf++);
+	for (xf = gf.column + 1, yf = gf.row + 1; xf < GAME_FIELDS_IN_LINE && yf < GAME_FIELDS_IN_LINE && _fields[xf][yf].type == gf.type; xf++, yf++);
 	if (yf - yb > 5 && xf - xb > 5)
 	{
 		fieldsCleared += yf - yb - 1;
@@ -358,9 +356,9 @@
 	}
 
 	// right up
-	for (xf = gf.column + 1, yb = gf.row - 1; xf < FIELDS_COUNT && yb >= 0 && _fields[xf][yb].type == gf.type; xf++, yb--);
+	for (xf = gf.column + 1, yb = gf.row - 1; xf < GAME_FIELDS_IN_LINE && yb >= 0 && _fields[xf][yb].type == gf.type; xf++, yb--);
 	// left down
-	for (xb = gf.column - 1, yf = gf.row + 1; xb >= 0 && yf < FIELDS_COUNT && _fields[xb][yf].type == gf.type; xb--, yf++);
+	for (xb = gf.column - 1, yf = gf.row + 1; xb >= 0 && yf < GAME_FIELDS_IN_LINE && _fields[xb][yf].type == gf.type; xb--, yf++);
 	if (yf - yb > 5 && xf - xb > 5)
 	{
 		fieldsCleared += yf - yb - 1;
@@ -422,7 +420,7 @@
 -(GameField *) placeInRandomEmptyField: (LONG)type
 {
 	LONG x, y;
-	LONG rx = Random() % FIELDS_COUNT, ry = Random() % FIELDS_COUNT;
+	LONG rx = Random() % GAME_FIELDS_IN_LINE, ry = Random() % GAME_FIELDS_IN_LINE;
 
 	x = rx;
 	y = ry;
@@ -436,9 +434,9 @@
 
 			return _fields[x][y];
 		}
-		x = (x + 1) % FIELDS_COUNT;
+		x = (x + 1) % GAME_FIELDS_IN_LINE;
 		if (x == 0)
-			y = (y + 1) % FIELDS_COUNT;
+			y = (y + 1) % GAME_FIELDS_IN_LINE;
 	} while(x != rx || y != ry);
 
 	return nil;
@@ -446,78 +444,78 @@
 
 -(BOOL) checkPathFrom: (GameField *)src to: (GameField *)dst
 {
-	SHORT g[FIELDS_COUNT * FIELDS_COUNT][FIELDS_COUNT * FIELDS_COUNT];
-	SHORT d[FIELDS_COUNT * FIELDS_COUNT], prev[FIELDS_COUNT * FIELDS_COUNT];
-	BOOL v[FIELDS_COUNT * FIELDS_COUNT];
+	SHORT g[GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE][GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE];
+	SHORT d[GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE], prev[GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE];
+	BOOL v[GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE];
 	const SHORT inf = 500;
 	SHORT x, y, count;
 	SHORT mindistance, nextnode;
-	SHORT srcIdx = src.column + FIELDS_COUNT * src.row;
-	SHORT dstIdx = dst.column + FIELDS_COUNT * dst.row;
+	SHORT srcIdx = src.column + GAME_FIELDS_IN_LINE * src.row;
+	SHORT dstIdx = dst.column + GAME_FIELDS_IN_LINE * dst.row;
 
-	for (x = 0; x < FIELDS_COUNT * FIELDS_COUNT; x++)
+	for (x = 0; x < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; x++)
 	{
-		for (y = 0; y < FIELDS_COUNT * FIELDS_COUNT; y++)
+		for (y = 0; y < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; y++)
 		{
 			g[x][y] = inf;
 		}
 	}
 
-	for (x = 0; x < FIELDS_COUNT; x++)
+	for (x = 0; x < GAME_FIELDS_IN_LINE; x++)
 	{
-		for (y = 0; y < FIELDS_COUNT; y++)
+		for (y = 0; y < GAME_FIELDS_IN_LINE; y++)
 		{
 			if (x - 1 >= 0)
 			{
 				if ([_fields[x - 1][y] empty])
-					g[x + FIELDS_COUNT * y][x - 1 + FIELDS_COUNT * y] = 1;
+					g[x + GAME_FIELDS_IN_LINE * y][x - 1 + GAME_FIELDS_IN_LINE * y] = 1;
 				if ([_fields[x][y] empty])
-					g[x - 1 + FIELDS_COUNT * y][x + FIELDS_COUNT * y] = 1;
+					g[x - 1 + GAME_FIELDS_IN_LINE * y][x + GAME_FIELDS_IN_LINE * y] = 1;
 			}
 
-			if (x + 1 < FIELDS_COUNT)
+			if (x + 1 < GAME_FIELDS_IN_LINE)
 			{
 				if ([_fields[x + 1][y] empty])
-					g[x + FIELDS_COUNT * y][x + 1 + FIELDS_COUNT * y] = 1;
+					g[x + GAME_FIELDS_IN_LINE * y][x + 1 + GAME_FIELDS_IN_LINE * y] = 1;
 				if ([_fields[x][y] empty])
-					g[x + 1 + FIELDS_COUNT * y][x + FIELDS_COUNT * y] = 1;
+					g[x + 1 + GAME_FIELDS_IN_LINE * y][x + GAME_FIELDS_IN_LINE * y] = 1;
 			}
 
 			if (y - 1 >= 0)
 			{
 				if ([_fields[x][y - 1] empty])
-					g[x + FIELDS_COUNT * y][x + FIELDS_COUNT * (y - 1)] = 1;
+					g[x + GAME_FIELDS_IN_LINE * y][x + GAME_FIELDS_IN_LINE * (y - 1)] = 1;
 				if ([_fields[x][y] empty])
-					g[x + FIELDS_COUNT * (y - 1)][x + FIELDS_COUNT * y] = 1;
+					g[x + GAME_FIELDS_IN_LINE * (y - 1)][x + GAME_FIELDS_IN_LINE * y] = 1;
 			}
 
-			if (y + 1 < FIELDS_COUNT)
+			if (y + 1 < GAME_FIELDS_IN_LINE)
 			{
 				if ([_fields[x][y + 1] empty])
-					g[x + FIELDS_COUNT * y][x + FIELDS_COUNT * (y + 1)] = 1;
+					g[x + GAME_FIELDS_IN_LINE * y][x + GAME_FIELDS_IN_LINE * (y + 1)] = 1;
 				if ([_fields[x][y] empty])
-					g[x + FIELDS_COUNT * (y + 1)][x + FIELDS_COUNT * y] = 1;
+					g[x + GAME_FIELDS_IN_LINE * (y + 1)][x + GAME_FIELDS_IN_LINE * y] = 1;
 			}
 		}
 	}
 
-#if defined (DEBUG) && FIELDS_COUNT <= 5
+#if defined (DEBUG) && GAME_FIELDS_IN_LINE <= 5
 	tprintf("PATH GRAPH\n");
 	KPrintF("             ");
-	for (int x = 0; x < FIELDS_COUNT * FIELDS_COUNT; x++)
+	for (int x = 0; x < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; x++)
 	{
 		KPrintF(" [%02d]  ", x);
 	}
 	KPrintF("\n            ");
-	for (int x = 0; x < FIELDS_COUNT * FIELDS_COUNT; x++)
+	for (int x = 0; x < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; x++)
 	{
-		KPrintF(" (%d %d) ", x % FIELDS_COUNT, x / FIELDS_COUNT);
+		KPrintF(" (%d %d) ", x % GAME_FIELDS_IN_LINE, x / GAME_FIELDS_IN_LINE);
 	}
 	KPrintF("\n");
-	for (int i = 0; i < FIELDS_COUNT * FIELDS_COUNT; i++)
+	for (int i = 0; i < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; i++)
 	{
-		KPrintF("[%02d] (%d %d)  ", i, i % FIELDS_COUNT, i / FIELDS_COUNT);
-		for (int j = 0; j < FIELDS_COUNT * FIELDS_COUNT; j++)
+		KPrintF("[%02d] (%d %d)  ", i, i % GAME_FIELDS_IN_LINE, i / GAME_FIELDS_IN_LINE);
+		for (int j = 0; j < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; j++)
 		{
 			if (g[i][j] == inf)
 				KPrintF("   -   ");
@@ -529,21 +527,21 @@
 	tprintf("PATH GRAPH END\n");
 #endif
 
-	for (x = 0; x < FIELDS_COUNT * FIELDS_COUNT; x++)
+	for (x = 0; x < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; x++)
 	{
 		d[x] = g[srcIdx][x];
 		v[x] = NO;
 		prev[x] = srcIdx;
 	}
 
-	d[src.column + FIELDS_COUNT * src.row] = 0;
-	v[src.column + FIELDS_COUNT * src.row] = YES;
+	d[src.column + GAME_FIELDS_IN_LINE * src.row] = 0;
+	v[src.column + GAME_FIELDS_IN_LINE * src.row] = YES;
 
-	for (count = 1; count < FIELDS_COUNT * FIELDS_COUNT - 1; count++)
+	for (count = 1; count < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE - 1; count++)
 	{
 		mindistance = inf;
 
-		for (x = 0; x < FIELDS_COUNT * FIELDS_COUNT; x++)
+		for (x = 0; x < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; x++)
 		{
 			if (d[x] < mindistance && !v[x])
 			{
@@ -556,7 +554,7 @@
 
 		v[nextnode] = YES;
 
-		for (x = 0; x < FIELDS_COUNT * FIELDS_COUNT; x++)
+		for (x = 0; x < GAME_FIELDS_IN_LINE * GAME_FIELDS_IN_LINE; x++)
 		{
 			if (!v[x])
 			{
@@ -574,9 +572,9 @@
 	count = _queue.count;
 	while (1)
 	{
-		SHORT px = prev[dstIdx] % FIELDS_COUNT, py = prev[dstIdx] / FIELDS_COUNT;
+		SHORT px = prev[dstIdx] % GAME_FIELDS_IN_LINE, py = prev[dstIdx] / GAME_FIELDS_IN_LINE;
 		GameField *from = _fields[px][py];
-		GameField *to = _fields[dstIdx % FIELDS_COUNT][dstIdx / FIELDS_COUNT];
+		GameField *to = _fields[dstIdx % GAME_FIELDS_IN_LINE][dstIdx / GAME_FIELDS_IN_LINE];
 
 		if (dstIdx == srcIdx)
 			break;
@@ -632,10 +630,10 @@
 
 -(VOID) askMinMax: (struct MUI_MinMax *)minmax
 {
-	minmax->MinWidth  +=  32 * FIELDS_COUNT + FIELDS_COUNT + 1;
-	minmax->MinHeight +=  32 * FIELDS_COUNT + FIELDS_COUNT + 1;
-	minmax->DefWidth  +=  64 * FIELDS_COUNT + FIELDS_COUNT + 1;
-	minmax->DefHeight +=  64 * FIELDS_COUNT + FIELDS_COUNT + 1;
+	minmax->MinWidth  +=  32 * GAME_FIELDS_IN_LINE + GAME_FIELDS_IN_LINE + 1;
+	minmax->MinHeight +=  32 * GAME_FIELDS_IN_LINE + GAME_FIELDS_IN_LINE + 1;
+	minmax->DefWidth  +=  64 * GAME_FIELDS_IN_LINE + GAME_FIELDS_IN_LINE + 1;
+	minmax->DefHeight +=  64 * GAME_FIELDS_IN_LINE + GAME_FIELDS_IN_LINE + 1;
 	minmax->MaxWidth  +=  MUI_MAXMAX;
 	minmax->MaxHeight +=  MUI_MAXMAX;
 }
@@ -663,5 +661,6 @@
 	}
 	[_queue addObject: [OBPerform performSelector: @selector(setAlpha:fields:) target: self withObject: [OBNumber numberWithUnsignedLong: 0xFFFFFFFF] withObject: fields]];
 }
+
 
 @end

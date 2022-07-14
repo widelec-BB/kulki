@@ -31,3 +31,5 @@
 #define APP_VERSION        "$VER: " APP_TITLE " " APP_VER_NO " (" __APP_DATE__ ") (c) " APP_COPYRIGHT
 
 #define APP_SCREEN_TITLE   APP_TITLE " " APP_VER_NO " " __APP_DATE__
+
+#define GAME_FIELDS_IN_LINE 9
