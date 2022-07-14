@@ -19,6 +19,7 @@
 #import "theme-internal.h"
 #import "theme-gfx.h"
 #import "game-field.h"
+#import "saved-game.h"
 #import "game-window.h"
 
 enum MenuOptions
@@ -43,6 +44,7 @@ enum MenuOptions
 	MUIString *_nameStr;
 	MUIMenu *_themeMenu;
 	MUIMenuitem *_difficultyMenuItems[3];
+	MUIButton *_undo;
 
 	GameArea *_ga;
 	HighScores *_hs;
@@ -50,7 +52,10 @@ enum MenuOptions
 	NextItems *_nextItems;
 
 	OBArray *_availableThemes;
+	SavedGame *_previousGameState;
 }
+
+@synthesize prevoiusGameState = _previousGameState;
 
 -(id) init
 {
@@ -68,6 +73,11 @@ enum MenuOptions
 
 		start.weight = 1;
 
+		_undo = [MUIButton buttonWithLabel: [OBString stringWithFormat: @"\33I[6:%d]", MUII_ArrowLeft]];
+		_undo.weight = 1;
+		_undo.shortHelp = OBL(@"Undo last move", @"Short help for undo last move button");
+		_undo.disabled = YES;
+
 		_scoreTxt = [MUIText textWithContents: [OBString stringWithFormat: OBL(@"%u points", @"Score format template for status bar"), 0]];
 		_ga = [[GameArea alloc] init];
 		_timer = [[Timer alloc] init];
@@ -80,7 +90,7 @@ enum MenuOptions
 			(statusBar = [MUIGroup horizontalGroupWithObjects:
 				(_statusBarPager = [MUIGroup groupWithPages:
 					[MUIGroup horizontalGroupWithObjects: [MUIRectangle rectangleWithWeight: 10], start, [MUIRectangle rectangleWithWeight: 10], nil],
-					[MUIGroup horizontalGroupWithObjects: [MUIRectangle rectangleWithWeight: 2], nextItemsLabel, _nextItems, [MUIRectangle rectangleWithWeight: 10], nil],
+					[MUIGroup horizontalGroupWithObjects: [MUIRectangle rectangleWithWeight: 2], _undo, nextItemsLabel, _nextItems, [MUIRectangle rectangleWithWeight: 10], nil],
 				nil]),
 				[MUIGroup groupWithObjects:
 					[MUIRectangle rectangle],
@@ -170,6 +180,7 @@ enum MenuOptions
 		statusBar.frame = MUIV_Frame_Group;
 
 		[start notify: @selector(selected) trigger: NO performSelector: @selector(startNewGame) withTarget: self];
+		[_undo notify: @selector(selected) trigger: NO performSelector: @selector(restorePreviousGameState) withTarget: self];
 		[saveButton notify: @selector(selected) trigger: NO performSelector: @selector(saveHighScore) withTarget: self];
 		[_nameStr notify: @selector(acknowledge) performSelector: @selector(saveHighScore) withTarget: self];
 
@@ -193,6 +204,7 @@ enum MenuOptions
 		level = 9;
 
 	[self changeDifficultyLevel: level];
+	_undo.disabled = YES;
 
 	return YES;
 }
@@ -224,7 +236,7 @@ enum MenuOptions
 	_scoreTxt.contents = [OBString stringWithFormat: OBL(@"%u points", @"Score format template for status bar"), _ga.score];
 }
 
--(VOID) setNextItems: (LONG[3])nextItems
+-(VOID) setNextItems: (BYTE[3])nextItems
 {
 	[_nextItems setNextItems: nextItems];
 }
@@ -427,6 +439,19 @@ enum MenuOptions
 	[themes insertObject: [[ThemeInternal alloc] init] atIndex: 0];
 
 	return success ? themes : nil;
+}
+
+-(VOID) setPreviousGameState: (SavedGame *)sg
+{
+	_previousGameState = sg;
+	_undo.disabled = sg == nil;
+}
+
+-(VOID) restorePreviousGameState
+{
+	_ga.score = _previousGameState.score;
+	[_ga restoreFieldsStateFrom: _previousGameState];
+	self.previousGameState = nil;
 }
 
 @end

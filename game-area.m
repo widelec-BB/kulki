@@ -12,6 +12,7 @@
 #import "globaldefines.h"
 #import "game-field.h"
 #import "game-window.h"
+#import "saved-game.h"
 #import "game-area.h"
 
 @implementation GameArea
@@ -24,7 +25,7 @@
 	OBMutableArray *_dirtyFields;
 	OBMutableArray *_queue;
 
-	LONG _nextItems[3];
+	BYTE _nextItems[3];
 	BOOL _firstMoveDone;
 	UBYTE _difficulty;
 	ULONG _score;
@@ -238,6 +239,12 @@
 
 	if(_activeField != nil && clickedField.empty)
 	{
+		SavedGame *sg = [[SavedGame alloc] init];
+
+		sg.score = self.score;
+		[sg storeFieldsState: _fields];
+		[sg storeNextItems: _nextItems];
+
 		if ([self checkPathFrom: _activeField to: clickedField])
 		{
 			_firstMoveDone = YES;
@@ -245,6 +252,7 @@
 			_activeField = nil;
 
 			[_queue addObject: [OBPerform performSelector: @selector(nextTurn:) target: self withObject: clickedField]];
+			[_queue addObject: [OBPerform performSelector: @selector(setPreviousGameState:) target: self.windowObject withObject: sg]];
 		}
 		else
 			DisplayBeep(NULL);
@@ -381,8 +389,7 @@
 		[_dirtyFields addObject: gf];
 	}
 
-	_score += fieldsCleared / 5 * _difficulty + (fieldsCleared % 5) * 2 * _difficulty;
-	[(GameWindow *)self.windowObject updateScore];
+	self.score += fieldsCleared / 5 * _difficulty + (fieldsCleared % 5) * 2 * _difficulty;
 
 	return fieldsCleared > 0;
 }
@@ -665,5 +672,19 @@
 	[_queue addObject: [OBPerform performSelector: @selector(setAlpha:fields:) target: self withObject: [OBNumber numberWithUnsignedLong: 0xFFFFFFFF] withObject: fields]];
 }
 
+-(VOID) restoreFieldsStateFrom: (SavedGame *)sg
+{
+	[sg loadFieldsState: _fields];
+	[self redraw: MADF_DRAWOBJECT];
+
+	[sg loadNextItems: _nextItems];
+	[(GameWindow *)self.windowObject setNextItems: _nextItems];
+}
+
+-(VOID) setScore: (ULONG)value
+{
+	_score = value;
+	[(GameWindow *)self.windowObject updateScore];
+}
 
 @end

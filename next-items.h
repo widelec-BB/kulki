@@ -8,6 +8,6 @@
 
 @interface NextItems : MUIArea
 
--(VOID) setNextItems: (LONG[3])nextItems;
+-(VOID) setNextItems: (BYTE[3])nextItems;
 
 @end

@@ -25,7 +25,7 @@
 	return self;
 }
 
--(VOID) setNextItems: (LONG[3])nextItems
+-(VOID) setNextItems: (BYTE[3])nextItems
 {
 	_nextItems[0].type = nextItems[0];
 	_nextItems[1].type = nextItems[1];

@@ -7,13 +7,15 @@
 #import <mui/MUIFramework.h>
 
 @class StatusBar;
+@class SavedGame;
 
 @interface GameArea : MUIArea
 
 @property (nonatomic, readonly) BOOL firstMoveDone;
 @property (nonatomic, readonly) UBYTE difficulty;
-@property (nonatomic, readonly) ULONG score;
+@property (nonatomic) ULONG score;
 
 -(VOID) startNewGameWithDifficulty: (UBYTE)level;
+-(VOID) restoreFieldsStateFrom: (SavedGame *)sg;
 
 @end
