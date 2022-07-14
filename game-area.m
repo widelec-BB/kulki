@@ -27,12 +27,14 @@
 	LONG _nextItems[3];
 	BOOL _firstMoveDone;
 	UBYTE _difficulty;
+	ULONG _score;
 
 	BOOL _wasDown;
 }
 
 @synthesize firstMoveDone = _firstMoveDone;
 @synthesize difficulty = _difficulty;
+@synthesize score = _score;
 
 -(id) init
 {
@@ -379,7 +381,8 @@
 		[_dirtyFields addObject: gf];
 	}
 
-	[(GameWindow *)self.windowObject addToScore: fieldsCleared / 5 * _difficulty + (fieldsCleared % 5) * 2 * _difficulty];
+	_score += fieldsCleared / 5 * _difficulty + (fieldsCleared % 5) * 2 * _difficulty;
+	[(GameWindow *)self.windowObject updateScore];
 
 	return fieldsCleared > 0;
 }

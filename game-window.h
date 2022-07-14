@@ -12,7 +12,7 @@
 -(VOID) gameOver;
 -(VOID) pauseTimer;
 -(VOID) resumeTimer;
--(VOID) addToScore: (ULONG) points;
+-(VOID) updateScore;
 -(VOID) setNextItems: (LONG[3])nextItems;
 
 @end

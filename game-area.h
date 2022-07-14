@@ -12,6 +12,7 @@
 
 @property (nonatomic, readonly) BOOL firstMoveDone;
 @property (nonatomic, readonly) UBYTE difficulty;
+@property (nonatomic, readonly) ULONG score;
 
 -(VOID) startNewGameWithDifficulty: (UBYTE)level;
 

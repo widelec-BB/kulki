@@ -49,8 +49,6 @@ enum MenuOptions
 	Timer *_timer;
 	NextItems *_nextItems;
 
-	ULONG _score;
-
 	OBArray *_availableThemes;
 }
 
@@ -205,7 +203,7 @@ enum MenuOptions
 
 	_statusBarPager.activePage = 0;
 
-	if ([_hs checkQualification: _score])
+	if ([_hs checkQualification: _ga.score])
 		_gamePager.activePage = 2;
 	else
 		_gamePager.activePage = 0;
@@ -213,7 +211,7 @@ enum MenuOptions
 
 -(VOID) saveHighScore
 {
-	[_hs addEntry: _nameStr.contents score: [OBNumber numberWithUnsignedLong: _score]];
+	[_hs addEntry: _nameStr.contents score: [OBNumber numberWithUnsignedLong: _ga.score]];
 
 	[(Application *)self.applicationObject saveENV];
 	[(Application *)self.applicationObject saveENVARC];
@@ -221,10 +219,9 @@ enum MenuOptions
 	_gamePager.activePage = 0;
 }
 
--(VOID) addToScore: (ULONG)points
+-(VOID) updateScore
 {
-	_score += points;
-	_scoreTxt.contents = [OBString stringWithFormat: OBL(@"%u points", @"Score format template for status bar"), _score];
+	_scoreTxt.contents = [OBString stringWithFormat: OBL(@"%u points", @"Score format template for status bar"), _ga.score];
 }
 
 -(VOID) setNextItems: (LONG[3])nextItems
@@ -294,7 +291,6 @@ enum MenuOptions
 
 	_statusBarPager.activePage = 1;
 	_gamePager.activePage = 1;
-	_score = 0;
 }
 
 -(VOID) setMenuAction: (ULONG)menuAction
