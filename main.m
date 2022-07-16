@@ -19,7 +19,7 @@ __attribute__ ((section(".text.consts"))) const char GitHash[] = "$GIT: "__GIT_H
 
 int muiMain(int argc, char *argv[])
 {
-	Application *mapp = [[Application alloc] initWithExecutableName: argc >= 1 ? argv[0] : NULL];
+	Application *mapp = [[Application alloc] init];
 
 	[mapp run];
 

@@ -10,7 +10,6 @@
 
 @property (nonatomic, readonly) OBString *executablePath;
 
--(id) initWithExecutableName: (STRPTR)executableName;
 -(VOID) about;
 
 @end

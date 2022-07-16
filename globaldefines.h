@@ -32,4 +32,6 @@
 
 #define APP_SCREEN_TITLE   APP_TITLE " " APP_VER_NO " " __APP_DATE__
 
+#define PATH_MAX 1024
+
 #define GAME_FIELDS_IN_LINE 9
