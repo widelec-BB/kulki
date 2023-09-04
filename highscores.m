@@ -9,14 +9,6 @@
 #import "globaldefines.h"
 #import "highscores.h"
 
-/*
- * I think this should be added to includes, just like with NSString.
- * [ a few moments later... ]
- * jaca agreed, so this is just waiting for new SDK, then it can be removed.
- */
-@interface NSNumber : OBNumber
-@end
-
 @implementation HighScores
 {
 	OBString *_names[10];
